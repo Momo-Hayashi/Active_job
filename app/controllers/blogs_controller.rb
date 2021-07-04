@@ -25,7 +25,7 @@ class BlogsController < ApplicationController
 
     respond_to do |format|
       if @blog.save
-        @blog.title_change
+        TitlesChangeJob.set(wait_until: Date.tomorrow.noon).perform_later(@blog.id)
         format.html { redirect_to @blog, notice: "Blog was successfully created." }
         format.json { render :show, status: :created, location: @blog }
       else
